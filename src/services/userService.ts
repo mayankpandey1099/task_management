@@ -5,7 +5,7 @@ const users: Map<string, User> = new Map();
 
 
 
-export const createUser = (name: string, email: string ): User => {
+export const createNewUser = (name: string, email: string ): User => {
   const userId = uuidv4();
   const newUser: User = { id: userId, name, email };
   users.set(userId, newUser);

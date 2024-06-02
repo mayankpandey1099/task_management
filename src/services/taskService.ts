@@ -26,7 +26,7 @@ getting task, taking userId and returning task array
 first putting values in iterable and converting to array
 */
 
-export const getTasks = (userId: string): Task[] => {
+export const findAllTask = (userId: string): Task[] => {
   if (!usersTasks.has(userId)) {
     return [];
   }
@@ -39,7 +39,7 @@ export const getTasks = (userId: string): Task[] => {
 getting particular task with taskId and userId
 */
 
-export const getTask = (userId: string, taskId: string): Task | null => {
+export const findOneTask = (userId: string, taskId: string): Task | null => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
     return null;
   }
@@ -51,7 +51,7 @@ export const getTask = (userId: string, taskId: string): Task | null => {
 updating task, taking userId, taskId, and replacing the new task with previous task by set method
 */
 
-export const updateTask = (userId: string, taskId: string, task: Omit<Task, 'id'>): Task | null => {
+export const updateOneTask = (userId: string, taskId: string, task: Omit<Task, 'id'>): Task | null => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
     return null;
   }
@@ -64,7 +64,7 @@ export const updateTask = (userId: string, taskId: string, task: Omit<Task, 'id'
 };
 
 
-export const deleteTask = (userId: string, taskId: string): boolean => {
+export const deleteOneTask = (userId: string, taskId: string): boolean => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
     return false;
   }
