@@ -1,0 +1,75 @@
+import { Task } from '../models/taskModel';
+import { v4 as uuidv4 } from 'uuid';
+
+const usersTasks: Map<string, Map<string, Task>> = new Map();
+
+/*
+creating task, taking userId, task and creating neew taskId, 
+storing in map containg userId 
+*/
+
+export const createNewTask = (userId: string, task: Omit<Task, 'id'>): Task => {
+  const taskId = uuidv4();
+  const newTask: Task = { id: taskId, ...task };
+
+  if (!usersTasks.has(userId)) {
+    usersTasks.set(userId, new Map());
+  }
+
+  usersTasks.get(userId)!.set(taskId, newTask);
+
+  return newTask;
+};
+
+/*
+getting task, taking userId and returning task array 
+first putting values in iterable and converting to array
+*/
+
+export const getTasks = (userId: string): Task[] => {
+  if (!usersTasks.has(userId)) {
+    return [];
+  }
+
+  return Array.from(usersTasks.get(userId)!.values());
+};
+
+
+/*
+getting particular task with taskId and userId
+*/
+
+export const getTask = (userId: string, taskId: string): Task | null => {
+  if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
+    return null;
+  }
+
+  return usersTasks.get(userId)!.get(taskId) || null;
+};
+
+/*
+updating task, taking userId, taskId, and replacing the new task with previous task by set method
+*/
+
+export const updateTask = (userId: string, taskId: string, task: Omit<Task, 'id'>): Task | null => {
+  if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
+    return null;
+  }
+
+  const updatedTask: Task = { id: taskId, ...task };
+
+  usersTasks.get(userId)!.set(taskId, updatedTask);
+
+  return updatedTask;
+};
+
+
+export const deleteTask = (userId: string, taskId: string): boolean => {
+  if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
+    return false;
+  }
+
+  usersTasks.get(userId)!.delete(taskId);
+
+  return true;
+};
