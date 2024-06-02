@@ -51,6 +51,7 @@ To run the project locally, follow these steps:
 
 ## Code Structure
 
+```sh
 task-management/
 ├── src/
 │   ├── controllers/
@@ -72,6 +73,7 @@ task-management/
 ├── tsconfig.json
 ├── nodemon.json
 └── README.md
+```
 
 ## Using Nodemon
 
