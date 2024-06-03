@@ -1,5 +1,4 @@
 import { createNewTask, findAllTask, findOneTask, updateOneTask, deleteOneTask } from '../services/taskService';
-//import { Task } from '../src/models/taskModel';
 
 describe('Task Service', () => {
   const userId = 'user-123';
