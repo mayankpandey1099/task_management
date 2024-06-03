@@ -75,7 +75,7 @@ export const deleteTaskController = (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    res.status(200).json("deleted successfully");
+    res.status(204).json();
   } catch (error) {
     console.error("failed to delete task", error);
     res.status(500).json({ error: 'Internal Server Error' });
