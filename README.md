@@ -175,11 +175,11 @@ Now, configure the 'jest.config.js' file and you can add this code directly to y
   }
 ```
 
--"preset": Specifies the preset to use for Jest configuration, `ts-jest` is a preset specifically designed for TypeScript projects, which provides default configurations and transforms TypeScript code for Jest to understand and execute.
+- "preset": Specifies the preset to use for Jest configuration, `ts-jest` is a preset specifically designed for TypeScript projects, which provides default configurations and transforms TypeScript code for Jest to understand and execute.
 
--"testEnvironment": Specifies which test environment to use. The `"node"` environment allows Jest to run tests in a Node.js-like environment, providing access to Node.js globals and modules.
+- "testEnvironment": Specifies which test environment to use. The `"node"` environment allows Jest to run tests in a Node.js-like environment, providing access to Node.js globals and modules.
 
--"testMatch": Specifies the glob patterns that Jest uses to detect test files, it's set to `["**/__tests__/**/*.test.ts"]`. This pattern will match all `.test.ts` files inside the `__tests__` directory and its subdirectories.
+- "testMatch": Specifies the glob patterns that Jest uses to detect test files, it's set to `["**/__tests__/**/*.test.ts"]`. This pattern will match all `.test.ts` files inside the `__tests__` directory and its subdirectories.
 
 
 
