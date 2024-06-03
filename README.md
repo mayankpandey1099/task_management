@@ -66,12 +66,16 @@ task-management/
 │   ├── services/
 │   │   ├── userService.ts
 │   │   └── taskService.ts
+│   ├── __tests__/
+│   │   ├── userController.test.ts
+│   │   ├── taskController.test.ts
+│   │   └── userService.test.ts
+│   │   └── taskService.test.ts
 │   ├── server.ts
 │   └── index.ts
 ├── .env
 ├── package.json
 ├── tsconfig.json
-├── nodemon.json
 └── README.md
 ```
 
@@ -136,5 +140,50 @@ Once installed, you can configure nodemon by creating a nodemon.json file in the
 
   - **server.ts**: Entry point for starting the backend server.
   - **index.ts**: Main file to start the application.
+
+## Jest Testing Framework Guide
+
+Jest is a JavaScript testing. It is used for testing JavaScript code. Jest provides a rich set of features such as test assertion, mocking, and code coverage reporting, making it a popular choice among developers for writing tests.
+
+## Initializing Jest in a Project
+
+### Step 1: Install Jest
+
+You can install Jest using npm:
+
+```bash
+npm install --save-dev jest
+npm install --save-dev @types/babel__traverse @types/jest ts-jest
+```
+### Step 2: Intialize Jest
+
+It will create 'jest.config.js' where we can add functionality
+
+```bash
+npx jest --init
+```
+
+Now, configure the 'jest.config.js' file and you can add this code directly to your package.json
+
+```bash
+"jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.test.ts"
+    ]
+  }
+```
+
+-"preset": Specifies the preset to use for Jest configuration, `ts-jest` is a preset specifically designed for TypeScript projects, which provides default configurations and transforms TypeScript code for Jest to understand and execute.
+
+-"testEnvironment": Specifies which test environment to use. The `"node"` environment allows Jest to run tests in a Node.js-like environment, providing access to Node.js globals and modules.
+
+-"testMatch": Specifies the glob patterns that Jest uses to detect test files, it's set to `["**/__tests__/**/*.test.ts"]`. This pattern will match all `.test.ts` files inside the `__tests__` directory and its subdirectories.
+
+
+
+
+
 
 
