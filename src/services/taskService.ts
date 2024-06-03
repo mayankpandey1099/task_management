@@ -63,6 +63,9 @@ export const updateOneTask = (userId: string, taskId: string, task: Omit<Task, '
   return updatedTask;
 };
 
+/*
+deleting task, taking userId, taskId, first fetching the element and using delete method to delete it from map.
+*/
 
 export const deleteOneTask = (userId: string, taskId: string): boolean => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
