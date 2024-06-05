@@ -10,6 +10,8 @@ import {
   deleteTaskController
 } from '../controllers/taskController';
 
+import {Effect} from "effect";
+
 
 const mockRequest = () => ({
   params: { user_id: '123', task_id: '10'} as ParamsDictionary,
@@ -33,16 +35,16 @@ jest.mock('../services/taskService', () => ({
 
 describe('Task Controller', () => {
 
-  it('should create a new task', () => {
+  it('should create a new task', async() => {
     const req = mockRequest();
     const res = mockResponse();
 
     const task = { ...req.body };
     const tasks = {'10' : task};
     const taskMap = { '123': tasks };
-    (createNewTask as jest.Mock).mockReturnValueOnce(taskMap['123']);
+    (createNewTask as jest.Mock).mockReturnValueOnce(Effect.succeed(taskMap['123']));
 
-    createTaskController(req, res);
+    await createTaskController(req, res);
     expect(res.status).toHaveBeenCalledWith(201);
     
   });

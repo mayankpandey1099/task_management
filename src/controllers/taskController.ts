@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { createNewTask, findAllTask, findOneTask, deleteOneTask, updateOneTask} from '../services/taskService';
+import {Effect} from "effect";
 
 
-
-export const createTaskController = (req: Request, res: Response) => {
+export const createTaskController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
     const task = req.body;
-    const newTask = createNewTask(userId, task);
+    const effect = createNewTask(userId, task);
+    const newTask = await Effect.runPromise(effect);
     res.status(201).json(newTask);
   } catch (error) {
     console.error("failed to create task", error);

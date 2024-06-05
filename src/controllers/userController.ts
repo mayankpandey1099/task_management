@@ -11,7 +11,6 @@ export const createUserController = async (req: Request, res: Response)=> {
   }
   try {
     const effect = createNewUser(name, email);
-    // Run the effect and await its result
     const result = await Effect.runPromise(effect);
     res.status(201).json(result);
   } catch (error) {

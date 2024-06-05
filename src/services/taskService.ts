@@ -1,5 +1,6 @@
 import { Task } from '../models/taskModel';
 import { v4 as uuidv4 } from 'uuid';
+import {Effect} from "effect";
 
 const usersTasks: Map<string, Map<string, Task>> = new Map();
 
@@ -8,7 +9,7 @@ creating task, taking userId, task and creating neew taskId,
 storing in map containg userId 
 */
 
-export const createNewTask = (userId: string, task: Omit<Task, 'id'>): Task => {
+export const createNewTask = (userId: string, task: Omit<Task, 'id'>): Effect.Effect<Task> => {
   const taskId = uuidv4();
   const newTask: Task = { id: taskId, ...task };
 
@@ -18,7 +19,7 @@ export const createNewTask = (userId: string, task: Omit<Task, 'id'>): Task => {
 
   usersTasks.get(userId)!.set(taskId, newTask);
 
-  return newTask;
+  return Effect.succeed(newTask);
 };
 
 /*
