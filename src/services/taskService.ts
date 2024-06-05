@@ -4,10 +4,6 @@ import {Effect} from "effect";
 
 const usersTasks: Map<string, Map<string, Task>> = new Map();
 
-/*
-creating task, taking userId, task and creating neew taskId, 
-storing in map containg userId 
-*/
 
 export const createNewTask = (userId: string, task: Omit<Task, 'id'>): Effect.Effect<Task> => {
   const taskId = uuidv4();
@@ -22,10 +18,6 @@ export const createNewTask = (userId: string, task: Omit<Task, 'id'>): Effect.Ef
   return Effect.succeed(newTask);
 };
 
-/*
-getting task, taking userId and returning task array 
-first putting values in iterable and converting to array
-*/
 
 export const findAllTask = (userId: string): Effect.Effect<Task[]> => {
   if (!usersTasks.has(userId)) {
@@ -35,9 +27,6 @@ export const findAllTask = (userId: string): Effect.Effect<Task[]> => {
 };
 
 
-/*
-getting particular task with taskId and userId
-*/
 
 export const findOneTask = (userId: string, taskId: string): Effect.Effect<Task | null> => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
@@ -47,9 +36,6 @@ export const findOneTask = (userId: string, taskId: string): Effect.Effect<Task 
   return Effect.succeed(usersTasks.get(userId)!.get(taskId) || null);
 };
 
-/*
-updating task, taking userId, taskId, and replacing the new task with previous task by set method
-*/
 
 export const updateOneTask = (userId: string, taskId: string, task: Omit<Task, 'id'>): Effect.Effect<Task | null> => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
@@ -63,15 +49,13 @@ export const updateOneTask = (userId: string, taskId: string, task: Omit<Task, '
   return Effect.succeed(updatedTask);
 };
 
-/*
-deleting task, taking userId, taskId, first fetching the element and using delete method to delete it from map.
-*/
+
 
 export const deleteOneTask = (userId: string, taskId: string): Effect.Effect<boolean> => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
     return Effect.succeed(false);
   }
   usersTasks.get(userId)!.delete(taskId);
-  
+
   return Effect.succeed(true);
 };

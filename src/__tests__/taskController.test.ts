@@ -9,6 +9,7 @@ import {
   updateTaskController,
   deleteTaskController
 } from '../controllers/taskController';
+import { findUser} from "../services/userService";
 
 import {Effect} from "effect";
 
@@ -33,6 +34,10 @@ jest.mock('../services/taskService', () => ({
   updateOneTask: jest.fn(),
 }));
 
+jest.mock('../services/userService', ()=>({
+  findUser: jest.fn(),
+}))
+
 describe('Task Controller', () => {
 
   it('should create a new task', async() => {
@@ -52,7 +57,10 @@ describe('Task Controller', () => {
   it('should get all tasks', async () => {
     const req = mockRequest();
     const res = mockResponse();
-
+    
+    const userDetail = { name: "man", email: 'man@gmail.com'}
+    const user = {'123': userDetail};
+    (findUser as jest.Mock).mockReturnValueOnce(Effect.succeed(user));
     const tasks = [
       { id: '11', title: 'Task 1', description: 'Description 1', dueDate: new Date(), status: 'To Do' },
       { id: '12', title: 'Task 2', description: 'Description 2', dueDate: new Date(), status: 'In Progress' }
@@ -69,7 +77,10 @@ describe('Task Controller', () => {
   it('should get one task', async() => {
     const req = mockRequest();
     const res = mockResponse();
-
+    
+    const userDetail = { name: "man", email: 'man@gmail.com'}
+    const user = {'123': userDetail};
+    (findUser as jest.Mock).mockReturnValueOnce(Effect.succeed(user));
     const task = { ...req.body };
     const tasks = {'10': task};
     const taskMap = { '123': tasks };
