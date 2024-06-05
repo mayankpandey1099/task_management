@@ -29,7 +29,7 @@ jest.mock('../services/taskService', () => ({
   createNewTask: jest.fn(),
   findAllTask: jest.fn(),
   findOneTask: jest.fn(),
-  // deleteOneTask: jest.fn(),
+  deleteOneTask: jest.fn(),
   updateOneTask: jest.fn(),
 }));
 
@@ -94,15 +94,14 @@ describe('Task Controller', () => {
 
   });
 
-  // it('should delete a task', () => {
-  //   const req = mockRequest();
-  //   const res = mockResponse();
+  it('should delete a task', async() => {
+    const req = mockRequest();
+    const res = mockResponse();
 
-  //   const taskMap = { '123': true };
-  //   (deleteOneTask as jest.Mock).mockReturnValueOnce(taskMap['123']);
+    const taskMap = { '123': true };
+    (deleteOneTask as jest.Mock).mockReturnValueOnce(Effect.succeed(taskMap['123']));
 
-  //   deleteTaskController(req, res);
-  //   expect(res.status).toHaveBeenCalledWith(204);
-
-  // });
+    await deleteTaskController(req, res);
+    expect(res.status).toHaveBeenCalledWith(204);
+  });
 });

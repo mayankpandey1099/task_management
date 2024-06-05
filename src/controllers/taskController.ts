@@ -39,6 +39,9 @@ export const getTaskController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
     const taskId = req.params.task_id;
+    if(!userId || !taskId){
+      return res.status(400).json({error: "!userId or !taskId not provided"});
+    }
     const task = await Effect.runPromise(findOneTask(userId, taskId));
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
@@ -56,33 +59,41 @@ export const updateTaskController = async(req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
     const taskId = req.params.task_id;
+    if(!userId || !taskId){
+      return res.status(400).json({error: "!userId or !taskId not provided"});
+    }
     const updatedTask = await Effect.runPromise(updateOneTask(userId, taskId, req.body));
 
     if (!updatedTask) {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    res.status(200).json(updatedTask);
+    return res.status(200).json(updatedTask);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
 
 
-export const deleteTaskController = (req: Request, res: Response) => {
+export const deleteTaskController = async(req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
     const taskId = req.params.task_id;
-    const success = deleteOneTask(userId, taskId);
+
+    if(!userId || !taskId){
+      return res.status(400).json({error: "userId or taskId not provided"});
+    }
+
+    const success = await Effect.runPromise(deleteOneTask(userId, taskId));
 
     if (!success) {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    res.status(204).json();
+    return res.status(204).json();
   } catch (error) {
     console.error("failed to delete task", error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };

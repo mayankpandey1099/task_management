@@ -34,12 +34,12 @@ describe('Task Service', () => {
     expect(updatedTask?.status).toBe('To Do');
   });
 
-  // it('should delete a task', () => {
-  //   const taskData = { title: 'Delete Task', description: 'Delete Description', dueDate: new Date(), status: 'Done' as const};
-  //   const task = createNewTask(userId, taskData);
-  //   const success = deleteOneTask(userId, task.id);
-  //   expect(success).toBe(true);
-  //   const fetchedTask = findOneTask(userId, task.id);
-  //   expect(fetchedTask).toBe(null);
-  // });
+  it('should delete a task', async() => {
+    const taskData = { title: 'Delete Task', description: 'Delete Description', dueDate: new Date(), status: 'Done' as const};
+    const task =  await Effect.runPromise(createNewTask(userId, taskData));
+    const success = await Effect.runPromise(deleteOneTask(userId, task.id));
+    expect(success).toBe(true);
+    const fetchedTask = await Effect.runPromise(findOneTask(userId, task.id));
+    expect(fetchedTask).toBe(null);
+  });
 });
