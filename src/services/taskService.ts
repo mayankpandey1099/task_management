@@ -27,12 +27,11 @@ getting task, taking userId and returning task array
 first putting values in iterable and converting to array
 */
 
-export const findAllTask = (userId: string): Task[] => {
+export const findAllTask = (userId: string): Effect.Effect<Task[]> => {
   if (!usersTasks.has(userId)) {
-    return [];
+    return Effect.succeed([]);
   }
-
-  return Array.from(usersTasks.get(userId)!.values());
+  return Effect.succeed(Array.from(usersTasks.get(userId)!.values()));
 };
 
 

@@ -17,10 +17,11 @@ export const createTaskController = async (req: Request, res: Response) => {
 };
 
 
-export const getAllTaskController = (req: Request, res: Response) => {
+export const getAllTaskController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
-    const tasks = findAllTask(userId);
+    const effect = findAllTask(userId);
+    const tasks = await Effect.runPromise(effect);
     res.status(200).json(tasks);
   } catch (error) {
     console.error("faled to fetch all tasks", error);

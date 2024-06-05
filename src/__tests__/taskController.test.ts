@@ -49,7 +49,7 @@ describe('Task Controller', () => {
     
   });
 
-  it('should get all tasks', () => {
+  it('should get all tasks', async () => {
     const req = mockRequest();
     const res = mockResponse();
 
@@ -58,9 +58,9 @@ describe('Task Controller', () => {
       { id: '12', title: 'Task 2', description: 'Description 2', dueDate: new Date(), status: 'In Progress' }
     ];
     const taskMap = { '123': tasks };
-    (findAllTask as jest.Mock).mockReturnValueOnce(taskMap['123']);
+    (findAllTask as jest.Mock).mockReturnValueOnce(Effect.succeed(taskMap['123']));
 
-    getAllTaskController(req, res);
+    await getAllTaskController(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(tasks);
 
