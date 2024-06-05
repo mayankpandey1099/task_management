@@ -30,7 +30,7 @@ jest.mock('../services/taskService', () => ({
   findAllTask: jest.fn(),
   findOneTask: jest.fn(),
   // deleteOneTask: jest.fn(),
-  // updateOneTask: jest.fn(),
+  updateOneTask: jest.fn(),
 }));
 
 describe('Task Controller', () => {
@@ -80,19 +80,19 @@ describe('Task Controller', () => {
 
   });
 
-  // it('should update a task', () => {
-  //   const req = mockRequest();
-  //   const res = mockResponse();
+  it('should update a task', async() => {
+    const req = mockRequest();
+    const res = mockResponse();
 
-  //   const updatedTask = { ...req.body };
-  //   const tasks = {'10': updatedTask};
-  //   const taskMap = { '123': tasks};
-  //   (updateOneTask as jest.Mock).mockReturnValueOnce(taskMap['123']);
+    const updatedTask = { ...req.body };
+    const tasks = {'10': updatedTask};
+    const taskMap = { '123': tasks};
+    (updateOneTask as jest.Mock).mockReturnValueOnce(Effect.succeed(taskMap['123']));
 
-  //   updateTaskController(req, res);
-  //   expect(res.status).toHaveBeenCalledWith(200);
+    await updateTaskController(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
 
-  // });
+  });
 
   // it('should delete a task', () => {
   //   const req = mockRequest();

@@ -25,14 +25,14 @@ describe('Task Service', () => {
     expect(fetchedTask).toEqual(task);
   });
 
-  // it('should update an existing task', () => {
-  //   const taskData = { title: 'Update Task', description: 'Update Description', dueDate: new Date(), status: 'Done' as const };
-  //   const task = createNewTask(userId, taskData);
-  //   const updatedData = { title: 'Updated Task', description: 'Updated Description', dueDate: new Date(), status: 'To Do' as const};
-  //   const updatedTask = updateOneTask(userId, task.id, updatedData);
-  //   expect(updatedTask?.title).toBe('Updated Task');
-  //   expect(updatedTask?.status).toBe('To Do');
-  // });
+  it('should update an existing task', async() => {
+    const taskData = { title: 'Task', description: 'Description', dueDate: new Date(), status: 'Done' as const };
+    const task = await Effect.runPromise(createNewTask(userId, taskData));
+    const updatedData = { title: 'Updated Task', description: 'Updated Description', dueDate: new Date(), status: 'To Do' as const};
+    const updatedTask = await Effect.runPromise(updateOneTask(userId, task.id, updatedData));
+    expect(updatedTask?.title).toBe('Updated Task');
+    expect(updatedTask?.status).toBe('To Do');
+  });
 
   // it('should delete a task', () => {
   //   const taskData = { title: 'Delete Task', description: 'Delete Description', dueDate: new Date(), status: 'Done' as const};

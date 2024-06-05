@@ -51,16 +51,16 @@ export const findOneTask = (userId: string, taskId: string): Effect.Effect<Task 
 updating task, taking userId, taskId, and replacing the new task with previous task by set method
 */
 
-export const updateOneTask = (userId: string, taskId: string, task: Omit<Task, 'id'>): Task | null => {
+export const updateOneTask = (userId: string, taskId: string, task: Omit<Task, 'id'>): Effect.Effect<Task | null> => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
-    return null;
+    return Effect.succeed(null);
   }
 
   const updatedTask: Task = { id: taskId, ...task };
 
   usersTasks.get(userId)!.set(taskId, updatedTask);
 
-  return updatedTask;
+  return Effect.succeed(updatedTask);
 };
 
 /*

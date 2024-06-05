@@ -7,14 +7,13 @@ export const createUserController = async (req: Request, res: Response)=> {
 
   // Validation: Check if all required fields are provided
   if (!name || !email ) {
-    res.status(400).json({ error: 'Name, email are required' });
-    return;
+    return res.status(400).json({ error: 'Name, email are required' });
   }
   try {
     const effect = createNewUser(name, email);
     const result = await Effect.runPromise(effect);
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create the user" });
+    return res.status(500).json({ error: "Failed to create the user" });
   }
 };
