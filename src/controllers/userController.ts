@@ -8,6 +8,7 @@ export const createUserController = async (req: Request, res: Response)=> {
   // Validation: Check if all required fields are provided
   if (!name || !email ) {
     res.status(400).json({ error: 'Name, email are required' });
+    return;
   }
   try {
     const effect = createNewUser(name, email);

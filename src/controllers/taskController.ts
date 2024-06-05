@@ -31,12 +31,11 @@ export const getAllTaskController = async (req: Request, res: Response) => {
 
 
 
-export const getTaskController = (req: Request, res: Response) => {
+export const getTaskController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
     const taskId = req.params.task_id;
-    const task = findOneTask(userId, taskId);
-
+    const task = await Effect.runPromise(findOneTask(userId, taskId));
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }

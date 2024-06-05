@@ -39,12 +39,12 @@ export const findAllTask = (userId: string): Effect.Effect<Task[]> => {
 getting particular task with taskId and userId
 */
 
-export const findOneTask = (userId: string, taskId: string): Task | null => {
+export const findOneTask = (userId: string, taskId: string): Effect.Effect<Task | null> => {
   if (!usersTasks.has(userId) || !usersTasks.get(userId)!.has(taskId)) {
-    return null;
+    return Effect.succeed(null);
   }
 
-  return usersTasks.get(userId)!.get(taskId) || null;
+  return Effect.succeed(usersTasks.get(userId)!.get(taskId) || null);
 };
 
 /*
