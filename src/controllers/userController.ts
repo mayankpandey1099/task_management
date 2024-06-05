@@ -1,14 +1,20 @@
 import { Request, Response } from 'express';
 import { createNewUser } from '../services/userService';
+import {Effect} from "effect";
 
-export const createUserController = (req: Request, res: Response) => {
+export const createUserController = async (req: Request, res: Response)=> {
   const { name, email } = req.body;
 
   // Validation: Check if all required fields are provided
   if (!name || !email ) {
-    return res.status(400).json({ error: 'Name, email are required' });
+    res.status(400).json({ error: 'Name, email are required' });
   }
-
-  const newUser = createNewUser(name, email);
-  res.status(201).json(newUser);
+  try {
+    const effect = createNewUser(name, email);
+    // Run the effect and await its result
+    const result = await Effect.runPromise(effect);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create the user" });
+  }
 };

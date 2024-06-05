@@ -13,8 +13,11 @@
   "author": "Mayank Pandey",
   "license": "ISC",
   "dependencies": {
+    "@effect-ts/core": "^0.60.5",
+    "@effect-ts/system": "^0.57.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "effect": "^3.2.8",
     "express": "^4.19.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
