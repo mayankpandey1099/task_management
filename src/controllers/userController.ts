@@ -13,8 +13,6 @@ const validateInput = (name: string, email: string): Effect.Effect<void, Error> 
 
 export const createUserController = async (req: Request, res: Response)=> {
   const { name, email } = req.body;
-
-  
   try {
     await Effect.runPromise(validateInput(name, email));
     const effect = createNewUser(name, email);

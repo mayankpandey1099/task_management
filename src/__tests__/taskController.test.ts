@@ -44,6 +44,10 @@ describe('Task Controller', () => {
     const req = mockRequest();
     const res = mockResponse();
 
+    const userDetail = { name: "man", email: 'man@gmail.com'}
+    const user = {'123': userDetail};
+    (findUser as jest.Mock).mockReturnValueOnce(Effect.succeed(user));
+
     const task = { ...req.body };
     const tasks = {'10' : task};
     const taskMap = { '123': tasks };
@@ -81,6 +85,7 @@ describe('Task Controller', () => {
     const userDetail = { name: "man", email: 'man@gmail.com'}
     const user = {'123': userDetail};
     (findUser as jest.Mock).mockReturnValueOnce(Effect.succeed(user));
+
     const task = { ...req.body };
     const tasks = {'10': task};
     const taskMap = { '123': tasks };
@@ -95,6 +100,10 @@ describe('Task Controller', () => {
     const req = mockRequest();
     const res = mockResponse();
 
+    const userDetail = { name: "man", email: 'man@gmail.com'}
+    const user = {'123': userDetail};
+    (findUser as jest.Mock).mockReturnValueOnce(Effect.succeed(user));
+
     const updatedTask = { ...req.body };
     const tasks = {'10': updatedTask};
     const taskMap = { '123': tasks};
@@ -108,6 +117,10 @@ describe('Task Controller', () => {
   it('should delete a task', async() => {
     const req = mockRequest();
     const res = mockResponse();
+
+    const userDetail = { name: "man", email: 'man@gmail.com'}
+    const user = {'123': userDetail};
+    (findUser as jest.Mock).mockReturnValueOnce(Effect.succeed(user));
 
     const taskMap = { '123': true };
     (deleteOneTask as jest.Mock).mockReturnValueOnce(Effect.succeed(taskMap['123']));

@@ -6,7 +6,11 @@ import {Effect} from "effect";
 const validateInput = (title: string, description: string, dueDate: Date, status: string): Effect.Effect<void, Error> => {
   if (!title || !description || !dueDate || !status) {
     return Effect.fail(new Error('data missing'));
-  } else {
+  } 
+  else if(status !== 'To Do' && status !== 'In Progress' && status !== 'Done' ){
+    return Effect.fail(new Error('wrong status'));
+  }
+  else {
     return Effect.succeed(() => {});
   }
 };
@@ -30,15 +34,14 @@ const validateUserId = (userId: string): Effect.Effect<void, Error> => {
 export const createTaskController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.user_id;
-    
     await Effect.runPromise(validateUserId(userId));
+    await Effect.runPromise(findUser(userId));
+
     const task = req.body;
     const {title, description, dueDate, status} = req.body;
-
     await Effect.runPromise(validateInput(title, description, dueDate, status));
 
     const effect = createNewTask(userId, task);
-
     const newTask = await Effect.runPromise(effect);
 
     return res.status(201).json(newTask);
@@ -46,7 +49,14 @@ export const createTaskController = async (req: Request, res: Response) => {
   catch (error: any) {
      if (error.message === "Error: data missing") {
       return res.status(400).json({error: "title, description, dueDate and status is required"});
-    }else {
+    }
+    else if(error.message === "Error: User not found"){
+      return res.status(400).json({error: 'User not found'});
+    }
+    else if(error.message === "Error: wrong status"){
+      return res.status(400).json({error: "Wrong status. try with 'To Do' || 'In Progress' || 'Done'"});
+    }
+    else {
       return res.status(500).json(error.message);
     }
   }
@@ -58,17 +68,18 @@ export const getAllTaskController = async (req: Request, res: Response) => {
     const userId = req.params.user_id;
 
     await Effect.runPromise(validateUserId(userId));
-    //await Effect.runPromise(findUser(userId));
+    await Effect.runPromise(findUser(userId));
 
     const effect = findAllTask(userId);
     const tasks = await Effect.runPromise(effect);
+
     return res.status(200).json(tasks);
   } 
   catch (error: any) {
     if(error.message === "Error: User not found"){
       return res.status(400).json({error: 'User not found'});
     }else{
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json(error.message);
     }
   }
 };
@@ -80,9 +91,10 @@ export const getTaskController = async (req: Request, res: Response) => {
     const userId = req.params.user_id;
     const taskId = req.params.task_id;
     await Effect.runPromise(validateId(userId, taskId));
-    //await Effect.runPromise(findUser(userId));
+    await Effect.runPromise(findUser(userId));
 
-    const task = await Effect.runPromise(findOneTask(userId, taskId));
+    const effect = findOneTask(userId, taskId); 
+    const task = await Effect.runPromise(effect);
 
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
@@ -98,7 +110,7 @@ export const getTaskController = async (req: Request, res: Response) => {
       return res.status(400).json({error: 'User not found'});
     }
     else{
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json(error.message);
     }
   }
 };
@@ -111,6 +123,10 @@ export const updateTaskController = async(req: Request, res: Response) => {
     const taskId = req.params.task_id;
 
     await Effect.runPromise(validateId(userId, taskId));
+    await Effect.runPromise(findUser(userId));
+
+    const {title, description, dueDate, status} = req.body;
+    await Effect.runPromise(validateInput(title, description, dueDate, status));
 
     const updatedTask = await Effect.runPromise(updateOneTask(userId, taskId, req.body));
 
@@ -124,8 +140,14 @@ export const updateTaskController = async(req: Request, res: Response) => {
     if(error.message === "Error: userId and taskId are required"){
       return res.status(400).json({ error: 'userId and taskId are required' });
     }
+    else if(error.message === "Error: User not found"){
+      return res.status(400).json({error: 'User not found'});
+    }
+    else if(error.message === "Error: wrong status"){
+      return res.status(400).json({error: "Wrong status. try with 'To Do' || 'In Progress' || 'Done'"});
+    }
     else{
-    return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json(error.message);
     }
   }
 };
@@ -138,6 +160,7 @@ export const deleteTaskController = async(req: Request, res: Response) => {
     const taskId = req.params.task_id;
 
     await Effect.runPromise(validateId(userId, taskId));
+    await Effect.runPromise(findUser(userId));
 
     const success = await Effect.runPromise(deleteOneTask(userId, taskId));
 
@@ -151,8 +174,11 @@ export const deleteTaskController = async(req: Request, res: Response) => {
     if(error.message === "Error: userId and taskId are required"){
       return res.status(400).json({ error: 'userId and taskId are required' });
     }
+    else if(error.message === "Error: User not found"){
+      return res.status(400).json({error: 'User not found'});
+    }
     else{
-    return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json(error.message);
     }
   }
 };
