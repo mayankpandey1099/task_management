@@ -259,7 +259,7 @@ export const createUserController = async (req: Request, res: Response)=> {
   const { name, email } = req.body;
   try {
     await Effect.runPromise(validateInput(name, email));
-    {......apply logic for handling user data......}
+    /*{......apply logic for handling user data......}*/
   }catch (error: any) {
     if (error.message === "Error: Name and email are required") {
       return res.status(400).json({error: "Name and email are required"});
