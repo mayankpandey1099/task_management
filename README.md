@@ -250,8 +250,8 @@ const validateInput = (name: string, email: string): Effect.Effect<void, Error> 
 ```
 
 - This function is asynchronous with taking Express request and response.
-- The promise is called and results in resolved or rejected state. This produces error or result as a data.
-- If error occurs, it goes into catch block and error is shown.
+- The promise is called and results in resolved or rejected state. This produces error or result as a object.
+- If error occurs, it goes into catch block and error is shown specific to error cause.
 - Else further computation is done with the result.
 
 ```bash
