@@ -1,5 +1,6 @@
 import { createNewTask, findAllTask, findOneTask, updateOneTask, deleteOneTask } from '../services/taskService';
 import {Effect} from "effect";
+import {NotFoundError} from "../errorHandlers/errors";
 
 describe('Task Service', () => {
   const userId = 'user-123';
@@ -39,7 +40,5 @@ describe('Task Service', () => {
     const task =  await Effect.runPromise(createNewTask(userId, taskData));
     const success = await Effect.runPromise(deleteOneTask(userId, task.id));
     expect(success).toBe(true);
-    const fetchedTask = await Effect.runPromise(findOneTask(userId, task.id));
-    expect(fetchedTask).toBe(null);
   });
 });

@@ -3,12 +3,14 @@ import { createNewTask, findAllTask, findOneTask, deleteOneTask, updateOneTask} 
 import {findUser } from "../services/userService";
 import {Effect} from "effect";
 
+import { BadRequestError, CustomError, NotFoundError, handleResponseError } from '../errorHandlers/errors';
+
 const validateInput = (title: string, description: string, dueDate: Date, status: string): Effect.Effect<void, Error> => {
   if (!title || !description || !dueDate || !status) {
-    return Effect.fail(new Error('data missing'));
+    return Effect.fail(BadRequestError('status is required'));
   } 
   else if(status !== 'To Do' && status !== 'In Progress' && status !== 'Done' ){
-    return Effect.fail(new Error('wrong status'));
+    return Effect.fail(BadRequestError('Wrong status'));
   }
   else {
     return Effect.succeed(() => {});
@@ -17,7 +19,7 @@ const validateInput = (title: string, description: string, dueDate: Date, status
 
 const validateId = (userId: string, taskId: string): Effect.Effect<void, Error> => {
   if (!userId || !taskId) {
-    return Effect.fail(new Error('userId and taskId are required'));
+    return Effect.fail(BadRequestError("Id's required"));
   } else {
     return Effect.succeed(() => {});
   }
@@ -25,7 +27,7 @@ const validateId = (userId: string, taskId: string): Effect.Effect<void, Error> 
 
 const validateUserId = (userId: string): Effect.Effect<void, Error> => {
   if(!userId){
-    return Effect.fail(new Error('userId is required'));
+    return Effect.fail(BadRequestError('userId is required'));
   }else{
     return Effect.succeed(() => {});
   }
@@ -46,19 +48,8 @@ export const createTaskController = async (req: Request, res: Response) => {
 
     return res.status(201).json(newTask);
   } 
-  catch (error: any) {
-     if (error.message === "Error: data missing") {
-      return res.status(400).json({error: "title, description, dueDate and status is required"});
-    }
-    else if(error.message === "Error: User not found"){
-      return res.status(400).json({error: 'User not found'});
-    }
-    else if(error.message === "Error: wrong status"){
-      return res.status(400).json({error: "Wrong status. try with 'To Do' || 'In Progress' || 'Done'"});
-    }
-    else {
-      return res.status(500).json(error.message);
-    }
+  catch (error: CustomError | any) {
+    return handleResponseError(res, error);
   }
 };
 
@@ -75,12 +66,8 @@ export const getAllTaskController = async (req: Request, res: Response) => {
 
     return res.status(200).json(tasks);
   } 
-  catch (error: any) {
-    if(error.message === "Error: User not found"){
-      return res.status(400).json({error: 'User not found'});
-    }else{
-    return res.status(500).json(error.message);
-    }
+  catch (error: CustomError | any) {
+    return handleResponseError(res, error);
   }
 };
 
@@ -95,23 +82,11 @@ export const getTaskController = async (req: Request, res: Response) => {
 
     const effect = findOneTask(userId, taskId); 
     const task = await Effect.runPromise(effect);
-
-    if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
-
+    
     return res.status(200).json(task);
   }
-  catch (error: any) {
-    if(error.message === "Error: userId and taskId are required"){
-      return res.status(400).json({ error: 'userId and taskId are required' });
-    }
-    else if(error.message === "Error: User not found"){
-      return res.status(400).json({error: 'User not found'});
-    }
-    else{
-      return res.status(500).json(error.message);
-    }
+  catch (error: CustomError | any) {
+    return handleResponseError(res, error);
   }
 };
 
@@ -130,25 +105,10 @@ export const updateTaskController = async(req: Request, res: Response) => {
 
     const updatedTask = await Effect.runPromise(updateOneTask(userId, taskId, req.body));
 
-    if (!updatedTask) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
-
     return res.status(200).json(updatedTask);
   } 
-  catch (error: any) {
-    if(error.message === "Error: userId and taskId are required"){
-      return res.status(400).json({ error: 'userId and taskId are required' });
-    }
-    else if(error.message === "Error: User not found"){
-      return res.status(400).json({error: 'User not found'});
-    }
-    else if(error.message === "Error: wrong status"){
-      return res.status(400).json({error: "Wrong status. try with 'To Do' || 'In Progress' || 'Done'"});
-    }
-    else{
-      return res.status(500).json(error.message);
-    }
+  catch (error: CustomError | any) {
+    return handleResponseError(res, error);
   }
 };
 
@@ -162,23 +122,10 @@ export const deleteTaskController = async(req: Request, res: Response) => {
     await Effect.runPromise(validateId(userId, taskId));
     await Effect.runPromise(findUser(userId));
 
-    const success = await Effect.runPromise(deleteOneTask(userId, taskId));
-
-    if (!success) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
-
+    await Effect.runPromise(deleteOneTask(userId, taskId));
     return res.status(204).json();
   } 
-  catch (error: any) {
-    if(error.message === "Error: userId and taskId are required"){
-      return res.status(400).json({ error: 'userId and taskId are required' });
-    }
-    else if(error.message === "Error: User not found"){
-      return res.status(400).json({error: 'User not found'});
-    }
-    else{
-      return res.status(500).json(error.message);
-    }
+  catch (error: CustomError | any) {
+    return handleResponseError(res, error);
   }
 };

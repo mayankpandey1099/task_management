@@ -122,6 +122,7 @@ describe('Task Controller', () => {
     const user = {'123': userDetail};
     (findUser as jest.Mock).mockReturnValueOnce(Effect.succeed(user));
 
+    
     const taskMap = { '123': true };
     (deleteOneTask as jest.Mock).mockReturnValueOnce(Effect.succeed(taskMap['123']));
 

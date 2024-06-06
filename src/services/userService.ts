@@ -1,6 +1,7 @@
 import { User } from '../models/userModel';
 import { v4 as uuidv4 } from 'uuid';
 import { Effect } from "effect";
+import {NotFoundError} from "../errorHandlers/errors";
 
 
 
@@ -18,7 +19,7 @@ export const findUser = (userId: string): Effect.Effect<void, Error> => {
   if (user) {
     return Effect.succeed(() => {});
   } else {
-    return Effect.fail(new Error('User not found'));
+    return Effect.fail(NotFoundError('User not found'));
   }
 };
 
