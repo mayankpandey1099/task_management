@@ -181,6 +181,99 @@ Now, configure the 'jest.config.js' file and you can add this code directly to y
 
 - "testMatch": Specifies the glob patterns that Jest uses to detect test files, it's set to `["**/__tests__/**/*.test.ts"]`. This pattern will match all `.test.ts` files inside the `__tests__` directory and its subdirectories.
 
+## Initializing Effect-ts Library 
+
+- `effect-ts` is a TypeScript library designed to handle side effects in a functional way. It provides a powerful set of abstractions for dealing with effects, errors.
+
+### Step 1: Install Effect
+
+To get started with `effect-ts`, install the necessary packages:
+
+```bash
+npm install @effect
+```
+### Step 2: Creating Effect 
+
+To create an Effect:
+
+```bash
+import { Effect } from "effect";
+```
+
+### Example for understanding how to retrieve user data
+ 
+- `Effect.succeed()` is used to return if success. And `Effect.fail()` is used to show error, when the data is not retrieved.
+- `Effect.Effect<User, Error>` This explains `User` is the return type when successful and `Error` when the condition fails.
+- This example is taken from the Effect-Ts library for understanding of concept of effect.
+
+```bash 
+import { Effect } from "effect"
+ 
+// Define a User type
+interface User {
+  readonly id: number
+  readonly name: string
+}
+ 
+// A mocked function to simulate fetching a user from a database
+const getUser = (userId: number): Effect.Effect<User, Error> => {
+  // Normally, you would access a database or an API here, but we'll mock it
+  const userDatabase: Record<number, User> = {
+    1: { id: 1, name: "John Doe" },
+    2: { id: 2, name: "Jane Smith" }
+  }
+ 
+  // Check if the user exists in our "database" and return appropriately
+  const user = userDatabase[userId]
+  if (user) {
+    return Effect.succeed(user)
+  } else {
+    return Effect.fail(new Error("User not found"))
+  }
+}
+ 
+// Example of using getUser to fetch user details
+const exampleUserEffect = getUser(1)  // This will successfully return the user with id 1
+```
+### Example for understanding promise used in the code 
+
+- The validateInput function validates the input parameters and returns an effect. If the input is invalid, it fails with an error; otherwise, it succeeds: 
+
+```bash
+const validateInput = (name: string, email: string): Effect.Effect<void, Error> => {
+  if (!name || !email) {
+    return Effect.fail(new Error('Name and email are required'));
+  } else {
+    return Effect.succeed(() => {});
+  }
+};
+```
+
+- This function is asynchronous with taking Express request and response.
+- The promise is called and results in resolved or rejected state. This produces error or result as a data.
+- If error occurs, it goes into catch block and error is shown.
+- Else further computation is done with the result.
+
+```bash
+export const createUserController = async (req: Request, res: Response)=> {
+  const { name, email } = req.body;
+  try {
+    await Effect.runPromise(validateInput(name, email));
+    {......apply logic for handling user data......}
+  }catch (error: any) {
+    if (error.message === "Error: Name and email are required") {
+      return res.status(400).json({error: "Name and email are required"});
+    }
+  }
+};
+```
+## Documentation
+- For more detailed documentation, refer to the effect-ts documentation 
+```bash
+https://effect.website/
+```
+
+
 
 
 
